@@ -13,9 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+import collections
 from autobahn.twisted.websocket import WebSocketClientProtocol
 
 class TopicClient(WebSocketClientProtocol):
+
+	def __init__(self):
+		self.self_id = ""
+		self.token = ""
+		self.subscription_map = collections.defaultdict(set)
+
 	def onConnect(self, response):
 		print("Connected!")
 
@@ -23,11 +31,27 @@ class TopicClient(WebSocketClientProtocol):
 		print("Websocket connection opened")
 
 	def send(self, msg):
-		print("Sending the following message: " + msg)
-		self.sendMessage(msg)
+		data = json.load(msg)
+		data["origin"] = self.self_id + "/."
+		print("Sending the following message: " + data)
+		self.sendMessage(data)
+
+	def send_binary(self, msg, payload):
+		data = json.load(msg)
+		data['data'] = len(payload)
+		data['origin'] = self.self_id + "/."
+		header = json.dumps(data).encode('utf-8')
+		frame = header + payload
+		self.sendMessage(frame,binary=True)
 
 	def onMessage(self, payload, isBinary):
-		print("Text message received: {0}".format(payload.decode('utf-8')))
+		msg = format(payload.decode('utf-8'))
+		data = json.loads(msg)
+		print(data)
+		if 'topic' not in data:
+			return
+		if data['topic'] in self.subscription_map:
+			self.subscription_map.get(data['topic'])(data['data'])
 
 	def onClose(self, wasClean, code, reason):
 		print("Websocket connection closed: {0}".format(reason))
@@ -37,4 +61,42 @@ class TopicClient(WebSocketClientProtocol):
 		self.token = token
 		print("self_id is " + self.self_id + ", and token is: " + self.token)
 
+	def subscribe(self, path, callback):
+		if path not in self.subscription_map:
+			self.subscription_map[path] = callback
 
+		data = {}
+		targets = [path]
+		data['targets'] = targets
+		data['msg'] = 'subscribe'
+		self.send(data)
+
+	def unsubscribe(self, path):
+		if path in self.subscription_map:
+			self.subscription_map.remove(path)
+			data = {}
+			targets = [path]
+			data['targets'] = targets
+			data['msg'] = 'unsubscribe'
+			self.send(data)
+			return True
+		return False
+
+	def publish(path, payload, persisted):
+		data = {}
+		targets = [path]
+		data['targets'] = targets
+		data['msg'] = 'publish_at'
+		data['data'] = payload
+		data['binary'] = False
+		data['persisted'] = persisted
+		self.send(data)
+
+	def publish_binary(path, payload, persisted):
+		data = {}
+		targets = [path]
+		data['targets'] = targets
+		data['msg'] = 'publish_at'
+		data['binary'] = True
+		data['persisited'] = persisted
+		self.send_binary(data, payload)
