@@ -62,6 +62,7 @@ class TopicClient:
 			print "message sent!"
 
 	def onMessage(self, data):
+		print "Message Received!!"
 		print(data)
 		if 'topic' not in data:
 			return
@@ -104,13 +105,15 @@ class TopicClient:
 		return False
 
 	def publish(self, path, payload, persisted):
+		print "Publishing: "
 		data = {}
 		targets = [path]
 		data['targets'] = targets
 		data['msg'] = 'publish_at'
-		data['data'] = str(payload)
+		data['data'] = str(json.dumps(payload))
 		data['binary'] = False
 		data['persisted'] = persisted
+
 		self.send(data)
 
 	def publish_binary(self, path, payload, persisted):

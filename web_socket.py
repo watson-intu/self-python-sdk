@@ -36,11 +36,3 @@ class WebSocket(WebSocketClientProtocol):
 
 	def onClose(self, wasClean, code, reason):
 		print("Websocket connection closed: {0}".format(reason))
-
-	@classmethod
-	def send(self, data):
-		print "SENDING OVER TO WEB SOCKET"
-		protocol = WebSocket()
-		print str(data).encode('utf8')
-		protocol.sendMessage(str(data).encode('utf8'))
-#		reactor.callFromThread(protocol.sendMessage, protocol, str(data).encode('utf8'))

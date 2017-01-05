@@ -16,6 +16,7 @@ from sensor import Sensor
 from topic_client import TopicClient
 
 import collections
+import json
 
 class SensorManager:
 
@@ -31,8 +32,29 @@ class SensorManager:
 			SensorManager.__instance = SensorManager()
 		return SensorManager.__instance
 
-	def on_event(payload):
-		print payload
+	def on_event(self, data):
+		error = False
+		print "in on event"
+		print type(data)
+		print data
+		payload = json.loads(data)
+		print payload['sensorId']
+		if payload['sensorId'] not in self.sensor_map:
+			print "Failed to find sensor: " + payload['sensorId']
+			error = True
+		elif payload['event'] == 'start_sensor':
+			self.sensor_map[payload['sensorId']].on_start()
+		elif payload['event'] == 'pause_sensor':
+			self.sensor_map[payload['sensorId']].on_pause()
+		elif payload['event'] == "resume_sensor":
+			self.sensor_map[payload['sensorId']].on_resume()
+
+		if error:
+			data = {}
+			data['failed_event'] = payload['event']
+			data['event'] = 'error'
+			TopicClient.get_instance().publish('sensor-manager', data, False)
+
 
 	def subscribe(self):
 		TopicClient.get_instance().subscribe("sensor-manager", self.on_event)
@@ -64,3 +86,6 @@ class SensorManager:
 			data['event'] = 'remove_sensor_proxy'
 			data['sensorId'] = sensor.get_sensor_id()
 			TopicClient.get_instance().publish('sensor-manager', data, False)
+
+	def shutdown(self):
+		TopicClient.get_instance().unsubscribe('sensor-manager')
