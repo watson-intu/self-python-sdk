@@ -20,6 +20,8 @@ from sensor_manager import SensorManager
 from camera_sensor import CameraSensor
 from gesture_manager import GestureManager
 from speech_gesture import SpeechGesture
+from example_agent import ExampleAgent
+from agent_society import AgentSociety
 
 import thread
 import time
@@ -29,13 +31,16 @@ def run_thread(self, threadName):
 		print "Thread is running!!"
 		sensor = CameraSensor(str(uuid.uuid4()), "Camera", "VideoData", "image/jpeg")
 		gesture = SpeechGesture("tts", str(uuid.uuid4()))
+		agent = ExampleAgent('ExampleAgent', str(uuid.uuid4()))
 		while TopicClient.get_instance().isConnected() == False:
 			print "Topic client not connected yet!"
 			time.sleep(1)
 		SensorManager.get_instance().subscribe()
 		GestureManager.get_instance().subscribe()
+		AgentSociety.get_instance().subscribe()
 		SensorManager.get_instance().add_sensor(sensor, True)
 		GestureManager.get_instance().add_gesture(gesture, True)
+		AgentSociety.get_instance().add_agent(agent, False)
 
 if __name__ == '__main__':
 	import sys
