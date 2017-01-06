@@ -34,11 +34,7 @@ class SensorManager:
 
 	def on_event(self, data):
 		error = False
-		print "in on event"
-		print type(data)
-		print data
 		payload = json.loads(data)
-		print payload['sensorId']
 		if payload['sensorId'] not in self.sensor_map:
 			print "Failed to find sensor: " + payload['sensorId']
 			error = True
@@ -89,3 +85,8 @@ class SensorManager:
 
 	def shutdown(self):
 		TopicClient.get_instance().unsubscribe('sensor-manager')
+
+	def find_sensor(self, data):
+		for k,v in self.sensor_map.iteritems():
+			if v.get_data_type() == data:
+				return v
