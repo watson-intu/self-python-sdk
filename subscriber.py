@@ -12,24 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from agent import Agent
-from blackboard import Blackboard
-from thing import ThingEventType
+class Subscriber(object):
 
-class ExampleAgent(Agent):
-	def __init__(self, agent_name, agent_id):
-			super(self.__class__, self).__init__(agent_name, agent_id)
-
-	def on_text(self, payload):
-		print "onText function called!"
-		print type(payload)
-		print payload['thing']['m_Text']
-
-	def on_start(self):
-		print "ExampleAgent has started!"
-		Blackboard.get_instance().subscribe_to_type("Text", ThingEventType.ADDED, "", self.on_text)
-		return True
-
-	def on_stop(self):
-		print "ExampleAgent has stopped!"
-		return True
+	def __init__(self, callback, event, path):
+		self.callback = callback
+		self.event = event
+		self.path = path
