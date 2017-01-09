@@ -56,14 +56,11 @@ class TopicClient:
 	def send(self, msg):
 		msg["origin"] = self.self_id + "/."
 		msg = json.dumps(msg)
-		print msg
 		if self.is_connected:
 			self.web_socket_instance.sendMessage(str(msg).encode('utf8'))
 			print "message sent!"
 
 	def onMessage(self, data):
-		print "Message Received!!"
-		print(data)
 		if 'topic' not in data:
 			return
 		if data['topic'] in self.subscription_map:
@@ -105,7 +102,6 @@ class TopicClient:
 		return False
 
 	def publish(self, path, payload, persisted):
-		print "Publishing: "
 		data = {}
 		targets = [path]
 		data['targets'] = targets

@@ -34,7 +34,6 @@ class AgentSociety:
 	def on_event(self, data):
 		error = False
 		payload = json.loads(data)
-		print payload
 		if payload['agentId'] not in self.agent_map:
 			print "Could not find agent id: " + payload['agentId']
 			error = True

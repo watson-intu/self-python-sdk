@@ -29,7 +29,6 @@ class SpeechGesture(Gesture):
 		return True
 
 	def execute(self, params):
-		print "Executing Speech Gesture!"
 		print params
 		text = params['text']
 		language = params['language']

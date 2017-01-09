@@ -21,7 +21,6 @@ class ExampleAgent(Agent):
 			super(self.__class__, self).__init__(agent_name, agent_id)
 
 	def on_text(self, payload):
-		print "onText function called!"
 		print type(payload)
 		print payload['thing']['m_Text']
 
