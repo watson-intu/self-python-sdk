@@ -22,8 +22,6 @@ from gesture import Gesture
 def worker(data, gestures_map):
 	error = False
 	payload = json.loads(data)
-	print "In Gesture Manager Worker!"
-	print payload
 	if payload['gestureId'] not in gestures_map:
 		print "Failed to find gesture: " + payload['gestureId']
 		error = True
@@ -80,7 +78,6 @@ class GestureManager:
 
 
 	def on_event(self, data):
-		print "In Gesture Manager On Event!"
 		p = multiprocessing.Process(target=worker, args=(data,self.gestures_map))
 		p.start()
 

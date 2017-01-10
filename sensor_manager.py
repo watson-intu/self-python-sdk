@@ -83,6 +83,13 @@ class SensorManager:
 			data['sensorId'] = sensor.get_sensor_id()
 			TopicClient.get_instance().publish('sensor-manager', data, False)
 
+	def send_data(self, sensor, data):
+		print "SensorManager SendData() Called!"
+		if self.is_registered(sensor):
+			TopicClient.get_instance().publish_binary('sensor-proxy-' + sensor.get_sensor_id(), data, False)
+		else:
+			print "SendData() invoked on unregistered sensor: " + sensor.get_sensor_id()
+
 	def shutdown(self):
 		TopicClient.get_instance().unsubscribe('sensor-manager')
 

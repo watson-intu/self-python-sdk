@@ -18,6 +18,7 @@ class CameraSensor(Sensor):
 
 	def __init__(self, sensor_id, sensor_name, data_type, binary_type):
 		super(self.__class__, self).__init__(sensor_id, sensor_name, data_type, binary_type)
+		self.is_paused = False
 		
 	def on_start(self):
 		print "Camera Sensor has started!"

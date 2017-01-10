@@ -15,6 +15,9 @@
 
 import json
 import collections
+import sys
+import codecs
+
 from web_socket import WebSocket
 from autobahn.twisted.websocket import WebSocketClientFactory, \
 	connectWS
@@ -35,6 +38,7 @@ class TopicClient:
 		self.web_socket_instance = None
 		self.factory = WebSocketClientFactory(u"ws://"+host+":"+str(port)+"/stream", headers=data)
 		self.factory.protocol = WebSocket
+		self.reader = codecs.getreader("utf-8")
 		connectWS(self.factory)
 		print "Topic Client is instantiated!"
 
@@ -57,8 +61,7 @@ class TopicClient:
 		msg["origin"] = self.self_id + "/."
 		msg = json.dumps(msg)
 		if self.is_connected:
-			self.web_socket_instance.sendMessage(str(msg).encode('utf8'))
-			print "message sent!"
+			self.web_socket_instance.sendMessage(str(msg).encode('utf8'),False)
 
 	def onMessage(self, data):
 		if 'topic' not in data:
@@ -66,13 +69,26 @@ class TopicClient:
 		if data['topic'] in self.subscription_map:
 			self.subscription_map.get(data['topic'])(data['data'])
 
-	def send_binary(self, msg, payload):
-		data = json.load(msg)
-		data['data'] = len(payload)
-		data['origin'] = self.self_id + "/."
-		header = json.dumps(data).encode('utf-8')
-		frame = header + payload
-		self.sendMessage(frame,binary=True)
+	def array_copy(self, src, srcPos, dest, destPos, length):
+		for i in range(length):
+			dest[i + destPos] = src[i + srcPos]
+		return dest
+
+	def bytes_copy(self, bytes, src, length):
+		for i in range(length):
+			print src[i]
+			bytes.extend(ord(src[i]))
+		return bytes
+
+	def send_binary(self, payload, data):
+		payload['data'] = len(data)
+		payload['origin'] = self.self_id + "/."
+		header = json.dumps(payload) + '\0'
+		print len(header)		
+		print len(data)
+		frame = b''.join([header,data])
+		print len(frame)
+		self.web_socket_instance.sendMessage(frame,True)
 
 	def isConnected(self):
 		return self.is_connected
