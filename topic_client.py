@@ -36,6 +36,7 @@ class TopicClient:
 		self.port = port
 		self.headers = data
 		self.web_socket_instance = None
+		self.callback = None
 		self.factory = WebSocketClientFactory(u"ws://"+host+":"+str(port)+"/stream", headers=data)
 		self.factory.protocol = WebSocket
 		self.reader = codecs.getreader("utf-8")
@@ -44,16 +45,23 @@ class TopicClient:
 
 	@classmethod
 	def get_instance(cls):
+		print cls.__instance
 		if cls.__instance == None:
+			print "Trying to re instantiated Topic Client for some reason..."
 			cls.__instance = TopicClient()
 		return cls.__instance 
 
 	@classmethod
 	def start_instance(cls, host, port, data):
+		print cls.__instance
 		if cls.__instance == None:
+			print "TopicClient Instantiated!"
 			cls.__instance = TopicClient(host, port, data)
 		return cls.__instance 
 
+	def set_callback(self, callback):
+		self.callback = callback
+		
 	def start(self):
 		reactor.run()
 		
@@ -94,6 +102,7 @@ class TopicClient:
 			print "Websocket not connected to send binary!"
 
 	def isConnected(self):
+		self.callback()
 		return self.is_connected
 
 	def setHeaders(self, id, token):

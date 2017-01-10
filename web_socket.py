@@ -27,6 +27,7 @@ class WebSocket(WebSocketClientProtocol):
 		from topic_client import TopicClient
 		TopicClient.get_instance().is_connected = True
 		TopicClient.get_instance().web_socket_instance = self
+		TopicClient.get_instance().isConnected()
 
 	def onMessage(self, payload, isBinary):
 		msg = format(payload.decode('utf-8'))

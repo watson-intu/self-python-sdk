@@ -26,11 +26,13 @@ class SensorManager:
 		self.sensor_map = collections.defaultdict(set)
 		self.overrides_map = collections.defaultdict(set)
 
-	@staticmethod
-	def get_instance():
-		if SensorManager.__instance == None:
-			SensorManager.__instance = SensorManager()
-		return SensorManager.__instance
+	@classmethod
+	def get_instance(cls):
+		print cls.__instance
+		if cls.__instance is None:
+			print "Sensor Manager has been instantiated!"
+			cls.__instance = SensorManager()
+		return cls.__instance
 
 	def on_event(self, data):
 		error = False
@@ -84,7 +86,6 @@ class SensorManager:
 			TopicClient.get_instance().publish('sensor-manager', data, False)
 
 	def send_data(self, sensor, data):
-		print "SensorManager SendData() Called!"
 		if self.is_registered(sensor):
 			TopicClient.get_instance().publish_binary('sensor-proxy-' + sensor.get_sensor_id(), data, False)
 		else:
