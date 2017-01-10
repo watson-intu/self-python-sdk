@@ -20,14 +20,6 @@ import multiprocessing
 import sys
 import pyaudio
 
-
-def worker(sensor):
-	p = pyaudio.PyAudio()
-	stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1600)
-	while True:
-		data = stream.read(int(1600))
-		SensorManager.get_instance().send_data(sensor, data)
-
 class MicrophoneSensor(Sensor):
 
 	def __init__(self, sensor_id, sensor_name, data_type, binary_type):
@@ -38,8 +30,6 @@ class MicrophoneSensor(Sensor):
 
 	def on_start(self):
 		print "Microphone Sensor has started!"
-#		self.p = multiprocessing.Process(target=worker, args=(self,))
-#		self.p.start()
 		self.get_stream()
 		return True
 

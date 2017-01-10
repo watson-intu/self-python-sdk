@@ -13,27 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from autobahn.twisted.websocket import WebSocketClientProtocol
-from twisted.internet import reactor
 import json
+from ws4py.client.threadedclient import WebSocketClient
 
-class WebSocket(WebSocketClientProtocol):
+class WebSocket(WebSocketClient):
 
-	def onConnect(self, response):
+	def opened(self):
 		print("Connected!")
-
-	def onOpen(self):
-		print("Websocket connection opened")
 		from topic_client import TopicClient
 		TopicClient.get_instance().is_connected = True
 		TopicClient.get_instance().web_socket_instance = self
 		TopicClient.get_instance().isConnected()
-
-	def onMessage(self, payload, isBinary):
-		msg = format(payload.decode('utf-8'))
-		data = json.loads(msg)
+		
+	def closed(self, code, reason=None):
+		print "Closed down", code, reason
 		from topic_client import TopicClient
-		TopicClient.get_instance().onMessage(data)
-
-	def onClose(self, wasClean, code, reason):
-		print("Websocket connection closed: {0}".format(reason))
+		TopicClient.get_instance().is_connected = False
+		
+	def received_message(self, payload):
+		if payload.is_text:
+			msg = payload.data.decode('utf-8')
+			data = json.loads(msg)
+			from topic_client import TopicClient
+			TopicClient.get_instance().onMessage(data)
+		else:
+			print "Cannot convert message returned to json!"

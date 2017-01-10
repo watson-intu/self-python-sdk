@@ -19,9 +19,6 @@ import sys
 import codecs
 
 from web_socket import WebSocket
-from autobahn.twisted.websocket import WebSocketClientFactory, \
-	connectWS
-from twisted.internet import reactor
 
 class TopicClient:
 
@@ -37,10 +34,9 @@ class TopicClient:
 		self.headers = data
 		self.web_socket_instance = None
 		self.callback = None
-		self.factory = WebSocketClientFactory(u"ws://"+host+":"+str(port)+"/stream", headers=data)
-		self.factory.protocol = WebSocket
-		self.reader = codecs.getreader("utf-8")
-		connectWS(self.factory)
+		reload(sys)
+		sys.setdefaultencoding('utf8')
+		self.reactor = WebSocket("ws://"+host+":"+str(port)+"/stream", headers=data, protocols=['http-only', 'chat'])
 		print "Topic Client is instantiated!"
 
 	@classmethod
@@ -63,13 +59,14 @@ class TopicClient:
 		self.callback = callback
 		
 	def start(self):
-		reactor.run()
+		self.reactor.connect()
+		self.reactor.run_forever()
 		
 	def send(self, msg):
 		msg["origin"] = self.self_id + "/."
 		msg = json.dumps(msg)
 		if self.is_connected:
-			self.web_socket_instance.sendMessage(str(msg).encode('utf8'),False)
+			self.web_socket_instance.send(str(msg).encode('utf8'),binary=False)
 
 	def onMessage(self, data):
 		if 'topic' not in data:
@@ -92,12 +89,12 @@ class TopicClient:
 		payload['data'] = len(data)
 		payload['origin'] = self.self_id + "/."
 		header = json.dumps(payload) + '\0'
+		header = header.encode('utf8')
 		print len(header)		
 		print len(data)
 		frame = b''.join([header,data])
-#		print frame
 		if self.is_connected:
-			self.web_socket_instance.sendMessage(frame.encode('utf8'),isBinary=True)
+			self.web_socket_instance.send(frame,binary=True)
 		else:
 			print "Websocket not connected to send binary!"
 

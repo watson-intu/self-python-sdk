@@ -68,32 +68,13 @@ class TestTopicClient(object):
 	def run(self):
 		try:
 			log.startLogging(sys.stdout)
-			headers = {'selfId': '', 'token': ''}
+			headers = [('selfId', ''), ('token', '')]
 			topic = TopicClient.start_instance('127.0.0.1', 9443, headers)
 			TopicClient.get_instance().setHeaders("", "")
 			TopicClient.get_instance().set_callback(self.on_connected);
-	#			p = multiprocessing.Process(target=run_thread, args=(headers,))
-	#			p.start()
-	#			thread.start_new_thread(run_thread, (headers))
 			topic.start()
 		except KeyboardInterrupt:
 			thread.exit()
 			
 if __name__ == '__main__':
 	TestTopicClient().run()
-#	import sys
-
-#	from twisted.python import log
-#	from twisted.internet import reactor
-#	try:
-#		log.startLogging(sys.stdout)
-#		headers = {'selfId': '', 'token': ''}
-#		topic = TopicClient.start_instance('127.0.0.1', 9443, headers)
-#		TopicClient.get_instance().setHeaders("", "")
-#		TopicClient.get_instance().set_callback(self.on_connected);
-#			p = multiprocessing.Process(target=run_thread, args=(headers,))
-#			p.start()
-#			thread.start_new_thread(run_thread, (headers))
-#		topic.start()
-#	except KeyboardInterrupt:
-#		thread.exit()
