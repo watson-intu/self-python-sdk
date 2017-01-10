@@ -17,9 +17,11 @@ from topic_client import TopicClient
 
 import collections
 import json
+import threading
 
-class SensorManager:
+class SensorManager(object):
 
+	__instance_lock = threading.Lock()
 	__instance = None
 
 	def __init__(self):		
@@ -28,10 +30,11 @@ class SensorManager:
 
 	@classmethod
 	def get_instance(cls):
-		print cls.__instance
-		if cls.__instance is None:
-			print "Sensor Manager has been instantiated!"
-			cls.__instance = SensorManager()
+		if not cls.__instance:
+			with cls.__instance_lock:
+				if not cls.__instance:
+					print "Sensor Manager has been instantiated!"
+					cls.__instance = cls()
 		return cls.__instance
 
 	def on_event(self, data):

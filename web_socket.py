@@ -29,6 +29,7 @@ class WebSocket(WebSocketClient):
 		print "Closed down", code, reason
 		from topic_client import TopicClient
 		TopicClient.get_instance().is_connected = False
+		TopicClient.get_instance().web_socket_instance = None
 		
 	def received_message(self, payload):
 		if payload.is_text:

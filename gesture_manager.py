@@ -19,24 +19,6 @@ import json
 from topic_client import TopicClient
 from gesture import Gesture
 
-def worker(data, gestures_map):
-	error = False
-	payload = json.loads(data)
-	if payload['gestureId'] not in gestures_map:
-		print "Failed to find gesture: " + payload['gestureId']
-		error = True
-	elif payload['event'] == 'execute_gesture':
-		params = payload['params']
-		gestures_map[payload['gestureId']].execute(params)
-	elif payload['event'] == 'abort_gesture':
-		gestures_map[payload['gestureId']].abort()
-
-	if error:
-		data = {}
-		data['failed_event'] = payload['event']
-		data['event'] = 'error'
-		TopicClient.get_instance().publish('gesture-manager', data, False)
-
 class GestureManager:
 
 	__instance = None
@@ -75,11 +57,24 @@ class GestureManager:
 				data['gestureId'] = gesture.get_gesture_id()
 				data['instanceId'] = gesture.get_instance_id()
 				TopicClient.get_instance().publish('gesture-manager', data, False)
-
-
+		
 	def on_event(self, data):
-		p = multiprocessing.Process(target=worker, args=(data,self.gestures_map))
-		p.start()
+		error = False
+		payload = json.loads(data)
+		if payload['gestureId'] not in self.gestures_map:
+			print "Failed to find gesture: " + payload['gestureId']
+			error = True
+		elif payload['event'] == 'execute_gesture':
+			params = payload['params']
+			self.gestures_map[payload['gestureId']].execute(params)
+		elif payload['event'] == 'abort_gesture':
+			self.gestures_map[payload['gestureId']].abort()
+
+		if error:
+			data = {}
+			data['failed_event'] = payload['event']
+			data['event'] = 'error'
+			TopicClient.get_instance().publish('gesture-manager', data, False)
 
 	def subscribe(self):
 		TopicClient.get_instance().subscribe('gesture-manager', self.on_event)

@@ -21,8 +21,7 @@ class ExampleAgent(Agent):
 			super(self.__class__, self).__init__(agent_name, agent_id)
 
 	def on_text(self, payload):
-		print type(payload)
-		print payload['thing']['m_Text']
+		print "ExampleAgent OnText(): " + payload['thing']['m_Text']
 
 	def on_start(self):
 		print "ExampleAgent has started!"

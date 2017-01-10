@@ -23,20 +23,21 @@ class SpeechGesture(Gesture):
 		super(self.__class__, self).__init__(gesture_id, instance_id)
 
 	def on_start(self):
+		print "SpeechGesture has started!"
 		return True
 
 	def on_stop(self):
+		print "SpeechGesture has stopped!"
 		return True
 
 	def execute(self, params):
-		print params
 		text = params['text']
 		language = params['language']
 		gender = params['gender']
 		sensor = SensorManager.get_instance().find_sensor('AudioData')
 		if sensor is not None:
 			sensor.on_pause()
-		print text
+		print "SpeechGesture: " + text
 		# TODO: Tell Gesture Manager you're done
 		GestureManager.get_instance().on_gesture_done(self, False)
 		if sensor is not None:

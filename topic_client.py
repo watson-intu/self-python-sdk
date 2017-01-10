@@ -17,6 +17,7 @@ import json
 import collections
 import sys
 import codecs
+import time
 
 from web_socket import WebSocket
 
@@ -41,7 +42,6 @@ class TopicClient:
 
 	@classmethod
 	def get_instance(cls):
-		print cls.__instance
 		if cls.__instance == None:
 			print "Trying to re instantiated Topic Client for some reason..."
 			cls.__instance = TopicClient()
@@ -49,7 +49,6 @@ class TopicClient:
 
 	@classmethod
 	def start_instance(cls, host, port, data):
-		print cls.__instance
 		if cls.__instance == None:
 			print "TopicClient Instantiated!"
 			cls.__instance = TopicClient(host, port, data)
@@ -74,24 +73,11 @@ class TopicClient:
 		if data['topic'] in self.subscription_map:
 			self.subscription_map.get(data['topic'])(data['data'])
 
-	def array_copy(self, src, srcPos, dest, destPos, length):
-		for i in range(length):
-			dest[i + destPos] = src[i + srcPos]
-		return dest
-
-	def bytes_copy(self, bytes, src, length):
-		for i in range(length):
-			print src[i]
-			bytes.extend(ord(src[i]))
-		return bytes
-
 	def send_binary(self, payload, data):
 		payload['data'] = len(data)
 		payload['origin'] = self.self_id + "/."
 		header = json.dumps(payload) + '\0'
 		header = header.encode('utf8')
-		print len(header)		
-		print len(data)
 		frame = b''.join([header,data])
 		if self.is_connected:
 			self.web_socket_instance.send(frame,binary=True)
@@ -134,7 +120,6 @@ class TopicClient:
 		data['data'] = str(json.dumps(payload))
 		data['binary'] = False
 		data['persisted'] = persisted
-
 		self.send(data)
 
 	def publish_binary(self, path, payload, persisted):
