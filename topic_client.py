@@ -87,8 +87,11 @@ class TopicClient:
 		print len(header)		
 		print len(data)
 		frame = b''.join([header,data])
-		print len(frame)
-		self.web_socket_instance.sendMessage(frame,True)
+#		print frame
+		if self.is_connected:
+			self.web_socket_instance.sendMessage(frame.encode('utf8'),isBinary=True)
+		else:
+			print "Websocket not connected to send binary!"
 
 	def isConnected(self):
 		return self.is_connected
