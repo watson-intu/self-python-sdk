@@ -101,8 +101,8 @@ class Thing(object):
 
 	def serialize(self):
 		data = {}
-		if bool(body):
-			for k,v in body.iteritems():
+		if bool(self.body):
+			for k,v in self.body.iteritems():
 				data[k] = v
 
 		data['Type_'] = self.type
@@ -116,7 +116,7 @@ class Thing(object):
 			data['m_DataType'] = self.data_type
 			data['m_Data'] = self.data
 
-		return json.dumps(data)
+		return data
 
 	def deserialize(self, payload):
 		self.body = payload

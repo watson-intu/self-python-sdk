@@ -113,8 +113,8 @@ class Blackboard:
 		data['event'] = 'add_object'
 		data['type'] = thing.get_type()
 		data['thing'] = thing.serialize()
-		if thing.get_parent_id():
-			data['parent'] = thing.get_parent_id()
+		if thing.get_parent():
+			data['parent'] = thing.get_parent()
 		TopicClient.get_instance().publish(path + 'blackboard', data, False)
 
 	def remove_thing(self, thing, path):
