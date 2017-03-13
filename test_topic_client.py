@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from autobahn.twisted.websocket import WebSocketClientFactory, \
-	connectWS
 from topic_client import TopicClient
 from sensor_manager import SensorManager
 from camera_sensor import CameraSensor
@@ -30,8 +28,6 @@ import time
 import uuid
 
 import sys
-from twisted.python import log
-from twisted.internet import reactor
 
 class TestTopicClient(object):
 	def run_thread(headers):
@@ -67,7 +63,6 @@ class TestTopicClient(object):
 		
 	def run(self):
 		try:
-			log.startLogging(sys.stdout)
 			headers = [('selfId', ''), ('token', '')]
 			topic = TopicClient.start_instance('127.0.0.1', 9443, headers)
 			TopicClient.get_instance().setHeaders("", "")
