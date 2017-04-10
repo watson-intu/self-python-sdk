@@ -13,14 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from topic_client import TopicClient
-from sensor_manager import SensorManager
-from camera_sensor import CameraSensor
-from microphone_sensor import MicrophoneSensor
-from gesture_manager import GestureManager
-from speech_gesture import SpeechGesture
-from example_agent import ExampleAgent
-from agent_society import AgentSociety
+from self.topics.topic_client import TopicClient
+from self.sensors.sensor_manager import SensorManager
+from self.sensors.camera_sensor import CameraSensor
+from self.sensors.microphone_sensor import MicrophoneSensor
+from self.gestures.gesture_manager import GestureManager
+from self.gestures.speech_gesture import SpeechGesture
+from self.agents.example_agent import ExampleAgent
+from self.agents.agent_society import AgentSociety
 
 import multiprocessing
 import thread

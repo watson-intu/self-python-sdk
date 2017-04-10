@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from agent import Agent
-from blackboard import Blackboard
-from thing import ThingEventType
+from self.agents.agent import Agent
+from self.blackboard.blackboard import Blackboard
+from self.blackboard.thing import ThingEventType
 
 class ExampleAgent(Agent):
 	def __init__(self, agent_name, agent_id):

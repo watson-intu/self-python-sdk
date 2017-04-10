@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from topic_client import TopicClient
-from subscriber import Subscriber
-from thing import Thing
-from thing import ThingEventType
-from thing import ThingEvent
+from self.topics.topic_client import TopicClient
+from self.blackboard.subscriber import Subscriber
+from self.blackboard.thing import Thing
+from self.blackboard.thing import ThingEventType
+from self.blackboard.thing import ThingEvent
 
 import collections
 import json

@@ -1,4 +1,3 @@
-
 # Copyright 2016 IBM All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,37 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from sensor import Sensor
-from sensor_manager import SensorManager
+from self.sensors.sensor import Sensor
 
-import sys
-import pyaudio
-
-class MicrophoneSensor(Sensor):
+class CameraSensor(Sensor):
 
 	def __init__(self, sensor_id, sensor_name, data_type, binary_type):
 		super(self.__class__, self).__init__(sensor_id, sensor_name, data_type, binary_type)
 		self.is_paused = False
-
-	def on_stream(self, in_data, frame_count, time_info, status):
-		if self.is_paused is False:
-			SensorManager.get_instance().send_data(self, in_data)
-		return in_data, pyaudio.paContinue
 		
 	def on_start(self):
-		self.p = pyaudio.PyAudio()
-		self.stream = self.p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1600, stream_callback=self.on_stream)
+		print "Camera Sensor has started!"
 		return True
-		
+
 	def on_stop(self):
-		print "Microphone Sensor has stopped!"
-		self.p.terminate()
+		print "Camera Sensor has stopped!"
 		return True
 
 	def on_pause(self):
-		print "Microphone Sensor has paused!"
+		print "Camera Sensor has paused!"
 		self.is_paused = True
 
 	def on_resume(self):
-		print "Microphone Sensor has resumed!"
+		print "Camera Sensor has resumed!"
 		self.is_paused = False
