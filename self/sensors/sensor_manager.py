@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from sensor import Sensor
-from topic_client import TopicClient
+from self.sensors.sensor import Sensor
+from self.topics.topic_client import TopicClient
 
 import collections
 import json

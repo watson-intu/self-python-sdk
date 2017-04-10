@@ -19,7 +19,7 @@ import sys
 import codecs
 import time
 
-from web_socket import WebSocket
+from self.topics.web_socket import WebSocket
 
 class TopicClient:
 

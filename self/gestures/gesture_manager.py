@@ -16,8 +16,8 @@ import collections
 import multiprocessing
 import json
 
-from topic_client import TopicClient
-from gesture import Gesture
+from self.topics.topic_client import TopicClient
+from self.gestures.gesture import Gesture
 
 class GestureManager:
 

@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gesture import Gesture
-from sensor import Sensor
-from sensor_manager import SensorManager
-from gesture_manager import GestureManager
+from self.gestures.gesture import Gesture
+from self.sensors.sensor import Sensor
+from self.sensors.sensor_manager import SensorManager
+from self.gestures.gesture_manager import GestureManager
 
 class SpeechGesture(Gesture):
 
