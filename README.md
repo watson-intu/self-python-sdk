@@ -4,6 +4,10 @@
 
 Need ws4py installed (pip install wsp4)
 
+2) How to test
+
+Run $ python test_topic_client.py
+
 2) Notes
 
 The following warning has been observed on Mac El Capitan OS:
