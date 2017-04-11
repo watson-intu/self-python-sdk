@@ -1,8 +1,12 @@
 # self-python-sdk
 
+This is the Intu SDK written in Python. The SDK is a thin WebSocket-based client that lets users make
+WebSocket connections to a running Intu instance, as well as create their own custom gestures, sensors, and
+agents that they can then plug in into the system. The whole system follows the publish-subscribe pattern.
+
 1) Requirements
 
-Need ws4py installed (pip install wsp4)
+Need ws4py installed (pip install ws4py)
 
 2) How to test
 
