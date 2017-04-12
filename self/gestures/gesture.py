@@ -24,8 +24,12 @@ class Gesture(object):
 
     def get_gesture_id(self):
         ''' Return the gesture ID associated with this gesture '''
+        if self.gesture_id is None or self.gesture_id == '':
+            raise Exception('gesture_id should not be empty or None')
         return self.gesture_id
 
     def get_instance_id(self):
         ''' Return the instance ID associated with this gesture '''
+        if self.instance_id is None or self.instance_id == '':
+            raise Exception('instance_id should not be empty or None')
         return self.instance_id
