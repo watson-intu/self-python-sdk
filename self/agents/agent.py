@@ -25,8 +25,12 @@ class Agent(object):
 
     def get_agent_name(self):
         ''' Return the name of the agent '''
+        if self.agent_name is None or self.agent_name == '':
+            raise Exception('The agent_name should not be blank or None')
         return self.agent_name
 
     def get_agent_id(self):
         ''' Return the ID of the agent '''
+        if self.agent_id is None or self.agent_id == '':
+            raise Exception('The agent_id should not be blank or None')
         return self.agent_id

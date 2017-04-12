@@ -26,13 +26,21 @@ class Sensor(object):
         self.binary_type = binary_type
 
     def get_sensor_id(self):
+        if self.sensor_id is None or self.sensor_id == '':
+            raise Exception("The sensor_id should not be null or blank")
         return self.sensor_id
 
     def get_sensor_name(self):
+        if self.sensor_name is None or self.sensor_name == '':
+            raise Exception("The sensor_name should not be null or blank")
         return self.sensor_name
 
     def get_data_type(self):
+        if self.data_type is None or self.data_type == '':
+            raise Exception("The data type should not be null or blank")
         return self.data_type
 
     def get_binary_type(self):
+        if self.binary_type is None or self.binary_type == '':
+            raise Exception("The binary type should not be null or blank")
         return self.binary_type
