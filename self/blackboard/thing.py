@@ -116,7 +116,7 @@ class Thing(object):
 
         data['Type_'] = self.type
         data['m_eCategory'] = self.category
-        data['m_GUID'] = self.guid
+        data['GUID_'] = self.guid
         data['m_fImportance'] = self.importance
         data['m_State'] = self.state
         data['m_fLifeSpan'] = self.life_span
@@ -132,7 +132,7 @@ class Thing(object):
         self.body = payload
         self.type = str(payload['Type_'])
         self.category = str(payload['m_eCategory'])
-        self.guid = str(payload['m_GUID'])
+        self.guid = str(payload['GUID_'])
         self.state = str(payload['m_State'])
         if 'm_fImportance' in payload:
             self.importance = str(payload['m_fImportance'])
